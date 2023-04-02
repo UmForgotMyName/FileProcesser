@@ -16,27 +16,28 @@ import org.json.simple.parser.ParseException;
 public class Instructions {
 	
 	//Location, path and processes should never be updated
-	private final String locationType;
-	private final String path;
 	private final JSONArray processingElements;
 	
 	//Constructor for instructions object
 	public Instructions(String filePath) {
 			this.processingElements = getProcessingElements(storeJSON(filePath));
-			this.locationType = (String) ((getInputEntries()).get("type"));
-			this.path = (String) ((getInputEntries()).get("path"));
 		}
 		
-	//Basic Getter methods
-	public String getLocationType() {
-		return locationType;
-	}
-
-	public String getPath() {
-		return path;
+	
+	
+	public void print() {
+		System.out.println("Parent");
 	}
 	
 	
+	//Static method to determine if we should create instance of local or remote instructions
+	public static String getLocation(String filePath) {
+		JSONObject obj = storeJSON(filePath);
+		JSONObject element = (JSONObject)((JSONArray) obj.get("processing_elements")).get(0);
+		JSONObject entries = (JSONObject)((JSONArray) element.get("input_entries")).get(0);
+		return (String) entries.get("type");
+		
+	}
 	
 	//Store input text file as searchable JSON object
 	private static JSONObject storeJSON(String filePath) {
