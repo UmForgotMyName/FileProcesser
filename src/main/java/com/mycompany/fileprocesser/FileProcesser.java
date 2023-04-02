@@ -3,8 +3,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 public class FileProcesser 
 {
@@ -17,7 +19,7 @@ public class FileProcesser
         
     }
     
-    public static List<File> filterLength(File[] file, long Length, String Operator)
+    public static List<File> filterLength(List<File> file, long Length, String Operator)
     {
         List<File> newFile = new ArrayList<File>();
         switch(Operator)
@@ -124,52 +126,46 @@ public class FileProcesser
         return newFile;
     }
     
-    public static List<File> filterCount(File[] file, String Key, int value) throws FileNotFoundException
-    {
-        List<File> newFile = new ArrayList<File>();
-        int keyCounter = 0;
-        if (file != null)
-                {
-                    for (File child : file)
-                    {
-                        String[] words = null;
-                        Scanner inp = new Scanner(child);
-                        String splitter;
-                            while(inp.hasNext())
-                            {
-                                splitter = inp.nextLine();
-                                words = splitter.split(" ");
-                                for (String word : words)
-                                {
-                                    if(word.equals(Key))
-                                        keyCounter++;
-                                }
-                            }
-                            if(keyCounter >= value)
-                                newFile.add(child);
-                            keyCounter = 0;
-                    }
+    public static List<File> filterCount(List<File> file, String key, int value) throws IOException {
+    List<File> newFile = new ArrayList<>();
+    int keyCounter = 0;
+    if (file != null) {
+        for (File child : file) {
+            BufferedReader br = new BufferedReader(new FileReader(child));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] words = line.split(" ");
+                for (String word : words) {
+                    if (word.equals(key))
+                        keyCounter++;
                 }
-                else
-                {
-                    System.out.println("An error has occured!");
-                }
-        return newFile;
+            }
+            br.close();
+            if (keyCounter >= value)
+                newFile.add(child);
+            keyCounter = 0;
+        }
+    } else {
+        System.out.println("An error has occurred!");
     }
-    
+    return newFile;
+}
+
+    // Not needed in the final bit of code, simply here for testing
     public static void main(String[] args) throws FileNotFoundException, IOException 
     {
+        // This gives an error so needs fixing
         File file = new File("C:\\Users\\hasan\\OneDrive\\Desktop\\Programming2\\Java\\Processing Files");
-        File[] dirList = {file};
+        List<File> dirList = new ArrayList<File>();
         if(file.isDirectory())
         {
-            dirList = file.listFiles();
+                dirList = Arrays.asList(file);
         }
         else
         {
-            dirList[0] = file;
+            dirList.add(file);
         }
-        filterLength(dirList ,20000 , "GTE");
+        
         System.out.println("List of length: ");
         printList(filterLength(dirList ,20000 , "GTE"));
         
