@@ -4,6 +4,7 @@
 
 package com.mycompany.fileprocesser;
 
+import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class FileProcesser {
         System.out.println("Hello Test!");
     }
     
-     public static List<File> ListMethod(List<File> entries, int max) {
+     public static List<File> ListMethod(List<File> entries, int max) throws IOException {
         List<File> result = new ArrayList<>();
         for (int i = 0; i < entries.size(); i++) {
             if (max == 0) {
@@ -41,7 +42,7 @@ public class FileProcesser {
         return result;
     }
      
-    public static List<File> RenameMethod(List<File> entries, String suffix) {
+    public static List<File> RenameMethod(List<File> entries, String suffix) throws IOException {
         List<File> result = new ArrayList<>();
         for (int i = 0; i < entries.size(); i++) {
             if (entries.get(i).isFile()) {
