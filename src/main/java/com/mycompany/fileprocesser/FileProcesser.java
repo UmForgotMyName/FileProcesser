@@ -2,15 +2,14 @@ package com.mycompany.fileprocesser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileProcesser 
 {
-    
-    public static ArrayList<File> newFile = new ArrayList<File>();
 
-    public static void printList()
+    public static void printList(List<File> newFile)
     {
         String newS = newFile.toString();
         
@@ -18,8 +17,9 @@ public class FileProcesser
         
     }
     
-    public static void filterLength(File[] file, long Length, String Operator)
+    public static List<File> filterLength(File[] file, long Length, String Operator)
     {
+        List<File> newFile = new ArrayList<File>();
         switch(Operator)
         {
             case "EQ":
@@ -121,10 +121,12 @@ public class FileProcesser
                 }
                 break;
         }
+        return newFile;
     }
     
-    public static void filterCount(File[] file, String Key, int value) throws FileNotFoundException
+    public static List<File> filterCount(File[] file, String Key, int value) throws FileNotFoundException
     {
+        List<File> newFile = new ArrayList<File>();
         int keyCounter = 0;
         if (file != null)
                 {
@@ -152,6 +154,7 @@ public class FileProcesser
                 {
                     System.out.println("An error has occured!");
                 }
+        return newFile;
     }
     
     public static void main(String[] args) throws FileNotFoundException, IOException 
@@ -168,11 +171,10 @@ public class FileProcesser
         }
         filterLength(dirList ,20000 , "GTE");
         System.out.println("List of length: ");
-        printList();
+        printList(filterLength(dirList ,20000 , "GTE"));
         
-        filterCount(dirList, "hasana", 1);
         System.out.println("List of count: ");
-        printList();
+        printList(filterCount(dirList, "hasana", 1));
         
     }
 }
