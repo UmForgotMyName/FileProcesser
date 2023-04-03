@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Arrays;
 
 public class FileProcesser 
 {
@@ -241,35 +242,10 @@ public class FileProcesser
                     else if(child.isDirectory())
                     {
                         // Goes through each file of the directory
-                        File[] temp = child.listFiles();
-                        for(File tempChild: temp)
-                        {
-                            // Create buffered reader object
-                            BufferedReader br = new BufferedReader(new FileReader(tempChild));
-                            // Initalize line string
-                            String line;
-                            // A while loop that ends if the file does not contain another line
-                            while ((line = br.readLine()) != null) 
-                            {
-                                // Split the words by space
-                                String[] words = line.split(" ");
-
-                                // For each loop to loop through every word in the file
-                                for (String word : words) 
-                                {
-                                    // If the word occurs in the file, increment keyCounter by one
-                                    if (word.equals(key))
-                                        keyCounter++;
-                                }
-                        }
-                        // Close buffered reader
-                        br.close();
-
-                        // Checks if the word is said a specified amount of times
-                        if (keyCounter >= value)
-                        newFile.add(tempChild);
-                        keyCounter = 0;
-                        }
+                        List<File> tempList = Arrays.asList(child.listFiles());
+                        tempList = filterCount(tempList, key, value);
+                        for(File tempChild : tempList)
+                            newFile.add(tempChild);
                     }
                 }
             } 
@@ -296,7 +272,7 @@ public class FileProcesser
         printList(filterLength(dirList ,109  , "EQ"));
         
         System.out.println("List of count: ");
-        printList(filterCount(dirList, "hasana", 1));
+        printList(filterCount(dirList, "hasana", 2));
         
     }
 }
