@@ -19,9 +19,9 @@ public class listMethods {
     private static int i = 0;
 
     // create file path 
-    static String userName = System.getProperty("user.name"); // get user computer name
-    static String filePath = "C:/Users/userID/OneDrive/Documents/NetBeansProjects/java/LaserficheAPI/DownloadedFiles";
-    static String fileOriginPath = "C:/Users/userID/OneDrive/Documents/NetBeansProjects/java/LaserficheAPI";
+    static String path = System.getProperty("user.dir");
+    static String filePath = "path/DownloadedFiles";
+    static String fileOriginPath = path;
 
     // access Laserfiche repository
     final String servicePrincipalKey = "5Yx6jm1xDBV8k-InPeff";
@@ -33,28 +33,28 @@ public class listMethods {
     // create new folder for files to be stored locally
     public void makeDirectory(){
         // Create new directory
-        filePath = filePath.replace("userID", userName);// replace user computer name into filePath
-        fileOriginPath = fileOriginPath.replace("userID", userName);// replace user computer name into filePath
+        filePath = filePath.replace("path", path);// replace user computer name into filePath
+//        fileOriginPath = fileOriginPath.replace("userID", userName);// replace user computer name into filePath
 
         File dir = new File(filePath);
         if (!dir.exists()) {
             boolean result = dir.mkdirs();
             if (result) {
-                System.out.println("Directory created successfully.");
+                System.out.println("\nDirectory created successfully.");
             } 
             else {
-                System.out.println("Directory creation failed.");
+                System.out.println("\nDirectory creation failed.");
             }
         }
         else {
-            System.out.println("Directory already exists.");
+            System.out.println("\nDirectory already exists.");
         } 
     }
     
     // change between new file directory and original directory
     public void changeDirectory(){
         System.setProperty("user.dir", filePath);
-        System.out.println(System.getProperty("user.dir"));
+        System.out.println("Current Directory: " +System.getProperty("user.dir"));
     }
     
     public void downloadFiles(List<Entry> temp){
@@ -113,6 +113,7 @@ public class listMethods {
         System.out.println(String.format("\nEntry ID: %d, Name: %s, EntryType: %s, FullPath: %s",temp2.getId(), temp2.getName(), temp2.getEntryType(), temp2.getFullPath()));
         for (Entry childEntry : temp) {
             System.out.println(String.format("Child Entry ID: %d, Name: %s, EntryType: %s, FullPath: %s",childEntry.getId(), childEntry.getName(), childEntry.getEntryType(), childEntry.getFullPath()));
+            System.out.println("File Size: %d", childEntry.getName().length())
         }
     }
 }
