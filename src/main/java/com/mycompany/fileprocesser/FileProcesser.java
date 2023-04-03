@@ -11,6 +11,7 @@ import java.io.FileReader;
 public class FileProcesser 
 {
 
+    // Not included in the final project simply here for testing
     public static void printList(List<File> newFile)
     {
         String newS = newFile.toString();
@@ -19,11 +20,16 @@ public class FileProcesser
         
     }
     
+    // Method to filter the files by length (size in bytes)
     public static List<File> filterLength(List<File> file, long Length, String Operator)
     {
+        // Create a list of file entries
         List<File> newFile = new ArrayList<File>();
+        
+        // Switch case with cases of each operator
         switch(Operator)
         {
+            // Case for equals operator
             case "EQ":
                 if (file != null)
                 {
@@ -40,7 +46,8 @@ public class FileProcesser
                     System.out.println("An error has occured!");
                 }
                 break;
-                
+            
+            // Case for not equals operator
             case "NEQ":
                 if (file != null)
                 {
@@ -58,6 +65,7 @@ public class FileProcesser
                 }
                 break;
                 
+            // Case for greater than operator
             case "GT":
                 if (file != null)
                 {
@@ -74,6 +82,8 @@ public class FileProcesser
                     System.out.println("An error has occured!");
                 }
                 break;
+                
+            // Case for greater than or equal to operator
             case "GTE":
                 if (file != null)
                 {
@@ -90,6 +100,8 @@ public class FileProcesser
                     System.out.println("An error has occured!");
                 }
                 break;
+                
+            // Case for less than operator
             case "LT":
                 if (file != null)
                 {
@@ -106,6 +118,8 @@ public class FileProcesser
                     System.out.println("An error has occured!");
                 }
                 break;
+                
+            // Case for less than or equal to operator
             case "LTE":
                 if (file != null)
                 {
@@ -119,39 +133,75 @@ public class FileProcesser
                 }
                 else
                 {
+                    // If a file is null, an error has occured
                     System.out.println("An error has occured!");
                 }
                 break;
         }
+        // Return list with new file(s)
         return newFile;
     }
     
-    public static List<File> filterCount(List<File> file, String key, int value) throws IOException {
-    List<File> newFile = new ArrayList<>();
-    int keyCounter = 0;
-    if (file != null) {
-        for (File child : file) {
-            BufferedReader br = new BufferedReader(new FileReader(child));
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] words = line.split(" ");
-                for (String word : words) {
-                    if (word.equals(key))
-                        keyCounter++;
+    // Method to filter out files that do not contain the specifed word a specifed number of times
+    public static List<File> filterCount(List<File> file, String key, int value) throws IOException 
+    {
+    
+        // Create a list of file entries
+        List<File> newFile = new ArrayList<>();
+        
+        // Initalize keyCounter to be equal to 0
+        int keyCounter = 0;
+        
+        // Check if file exists
+        if (file != null) 
+        {
+            // Read every file within the directory (works for individual file)
+            for (File child : file) 
+            {
+                // Create buffered reader object
+                BufferedReader br = new BufferedReader(new FileReader(child));
+                
+                // Initalize line string
+                String line;
+                
+                // A while loop that ends if the file does not contain another line
+                while ((line = br.readLine()) != null) 
+                {
+                    // Split the words by space
+                    String[] words = line.split(" ");
+                    
+                    // For each loop to loop through every word in the file
+                    for (String word : words) 
+                    {
+                        // If the word occurs in the file, increment keyCounter by one
+                        if (word.equals(key))
+                            keyCounter++;
+                    }
                 }
+                
+                // Close buffered reader
+                br.close();
+                
+                // Checks if the word is said a specified amount of times
+                if (keyCounter >= value)
+                    newFile.add(child);
+                keyCounter = 0;
             }
-            br.close();
-            if (keyCounter >= value)
-                newFile.add(child);
-            keyCounter = 0;
-        }
-    } else {
-        System.out.println("An error has occurred!");
-    }
+            
+        } 
+        // Print error message if error has occured
+        else 
+            {
+                System.out.println("An error has occurred!");
+            }
+    // Return new file
     return newFile;
 }
 
-    // Not needed in the final bit of code, simply here for testing
+    /*
+    Not needed in the final bit, simply here for testing
+    The code works if parameters are correct, use the following to test
+    */
     public static void main(String[] args) throws FileNotFoundException, IOException 
     {
         // This gives an error so needs fixing
