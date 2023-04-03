@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -21,7 +20,7 @@ public class FileProcesser
     }
     
     // Method to filter the files by length (size in bytes)
-    public static List<File> filterLength(List<File> file, long Length, String Operator)
+    public static List<File> filterLength (List<File> file, long Length, String Operator)
     {
         // Create a list of file entries
         List<File> newFile = new ArrayList<File>();
@@ -35,9 +34,16 @@ public class FileProcesser
                 {
                     for (File child : file)
                     {
-                        if(child.length() == Length)
+                        if(child.length() == Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            File[] temp = child.listFiles();
+                            for(File tempChild : temp)
+                                if(tempChild.length() == Length)
+                                    newFile.add(tempChild);
                         }
                     }
                 }
@@ -53,9 +59,16 @@ public class FileProcesser
                 {
                     for (File child : file)
                     {
-                        if(child.length() != Length)
+                        if(child.length() != Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            File[] temp = child.listFiles();
+                            for(File tempChild : temp)
+                                if(tempChild.length() != Length)
+                                    newFile.add(tempChild);
                         }
                     }
                 }
@@ -71,9 +84,16 @@ public class FileProcesser
                 {
                     for (File child : file)
                     {
-                        if(child.length() > Length)
+                        if(child.length() > Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            File[] temp = child.listFiles();
+                            for(File tempChild : temp)
+                                if(tempChild.length() > Length)
+                                    newFile.add(tempChild);
                         }
                     }
                 }
@@ -89,9 +109,16 @@ public class FileProcesser
                 {
                     for (File child : file)
                     {
-                        if(child.length() >= Length)
+                        if(child.length() >= Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            File[] temp = child.listFiles();
+                            for(File tempChild : temp)
+                                if(tempChild.length() >= Length)
+                                    newFile.add(tempChild);
                         }
                     }
                 }
@@ -107,9 +134,16 @@ public class FileProcesser
                 {
                     for (File child : file)
                     {
-                        if(child.length() < Length)
+                        if(child.length() < Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            File[] temp = child.listFiles();
+                            for(File tempChild : temp)
+                                if(tempChild.length() < Length)
+                                    newFile.add(tempChild);
                         }
                     }
                 }
@@ -125,9 +159,16 @@ public class FileProcesser
                 {
                     for (File child : file)
                     {
-                        if(child.length() <= Length)
+                        if(child.length() <= Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            File[] temp = child.listFiles();
+                            for(File tempChild : temp)
+                                if(tempChild.length() <= Length)
+                                    newFile.add(tempChild);
                         }
                     }
                 }
@@ -152,50 +193,94 @@ public class FileProcesser
         // Initalize keyCounter to be equal to 0
         int keyCounter = 0;
         
-        // Check if file exists
-        if (file != null) 
+        // Checks if value is greater than 0
+        if(value<=0)
         {
-            // Read every file within the directory (works for individual file)
-            for (File child : file) 
+            System.out.println("An error has occured, returning original file");
+            return file;
+        }
+        else
+        {
+            // Check if file exists
+            if (file != null) 
             {
-                // Create buffered reader object
-                BufferedReader br = new BufferedReader(new FileReader(child));
-                
-                // Initalize line string
-                String line;
-                
-                // A while loop that ends if the file does not contain another line
-                while ((line = br.readLine()) != null) 
+                // Read every file within the directory (works for individual file)
+                for (File child : file) 
                 {
-                    // Split the words by space
-                    String[] words = line.split(" ");
-                    
-                    // For each loop to loop through every word in the file
-                    for (String word : words) 
+                    // Checks if it is a file
+                    if(child.isFile())
                     {
-                        // If the word occurs in the file, increment keyCounter by one
-                        if (word.equals(key))
-                            keyCounter++;
+                        // Create buffered reader object
+                        BufferedReader br = new BufferedReader(new FileReader(child));
+                        // Initalize line string
+                        String line;
+                        // A while loop that ends if the file does not contain another line
+                        while ((line = br.readLine()) != null) 
+                        {
+                            // Split the words by space
+                            String[] words = line.split(" ");
+
+                            // For each loop to loop through every word in the file
+                            for (String word : words) 
+                            {
+                                // If the word occurs in the file, increment keyCounter by one
+                                if (word.equals(key))
+                                    keyCounter++;
+                            }
+                        }
+                        // Close buffered reader
+                        br.close();
+
+                        // Checks if the word is said a specified amount of times
+                        if (keyCounter >= value)
+                        newFile.add(child);
+                        keyCounter = 0;
+                    }
+
+                    // Checks if it is a directory
+                    else if(child.isDirectory())
+                    {
+                        // Goes through each file of the directory
+                        File[] temp = child.listFiles();
+                        for(File tempChild: temp)
+                        {
+                            // Create buffered reader object
+                            BufferedReader br = new BufferedReader(new FileReader(tempChild));
+                            // Initalize line string
+                            String line;
+                            // A while loop that ends if the file does not contain another line
+                            while ((line = br.readLine()) != null) 
+                            {
+                                // Split the words by space
+                                String[] words = line.split(" ");
+
+                                // For each loop to loop through every word in the file
+                                for (String word : words) 
+                                {
+                                    // If the word occurs in the file, increment keyCounter by one
+                                    if (word.equals(key))
+                                        keyCounter++;
+                                }
+                        }
+                        // Close buffered reader
+                        br.close();
+
+                        // Checks if the word is said a specified amount of times
+                        if (keyCounter >= value)
+                        newFile.add(tempChild);
+                        keyCounter = 0;
+                        }
                     }
                 }
-                
-                // Close buffered reader
-                br.close();
-                
-                // Checks if the word is said a specified amount of times
-                if (keyCounter >= value)
-                    newFile.add(child);
-                keyCounter = 0;
-            }
-            
-        } 
-        // Print error message if error has occured
-        else 
-            {
-                System.out.println("An error has occurred!");
-            }
-    // Return new file
-    return newFile;
+            } 
+            // Print error message if error has occured
+            else 
+                {
+                    System.out.println("An error has occurred!");
+                }
+            // Return new file
+            return newFile;
+        }
 }
 
     /*
@@ -204,20 +289,11 @@ public class FileProcesser
     */
     public static void main(String[] args) throws FileNotFoundException, IOException 
     {
-        // This gives an error so needs fixing
-        File file = new File("C:\\Users\\hasan\\OneDrive\\Desktop\\Programming2\\Java\\Processing Files");
         List<File> dirList = new ArrayList<File>();
-        if(file.isDirectory())
-        {
-                dirList = Arrays.asList(file);
-        }
-        else
-        {
-            dirList.add(file);
-        }
+        dirList.add(new File("C:\\Users\\hasan\\OneDrive\\Desktop\\Programming2\\Java\\Processing Files"));
         
         System.out.println("List of length: ");
-        printList(filterLength(dirList ,20000 , "GTE"));
+        printList(filterLength(dirList ,109  , "EQ"));
         
         System.out.println("List of count: ");
         printList(filterCount(dirList, "hasana", 1));
