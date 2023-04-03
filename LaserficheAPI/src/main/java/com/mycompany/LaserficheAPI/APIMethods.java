@@ -34,7 +34,6 @@ public class APIMethods {
     public void makeDirectory(){
         // Create new directory
         filePath = filePath.replace("path", path);// replace user computer name into filePath
-//        fileOriginPath = fileOriginPath.replace("userID", userName);// replace user computer name into filePath
 
         File dir = new File(filePath);
         if (!dir.exists()) {
