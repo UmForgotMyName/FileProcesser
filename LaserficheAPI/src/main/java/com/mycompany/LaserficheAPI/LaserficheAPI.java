@@ -44,24 +44,24 @@ public class LaserficheAPI {
         List<Entry> entries4 = result4.getValue();
         
         // create list methods object
-        listMethods useListMethods = new listMethods();
+        APIMethods useAPIMethods = new APIMethods();
 
         // print entry data sets
-        useListMethods.print(entries1, entry1);
-        useListMethods.print(entries2, entry2);
-        useListMethods.print(entries3, entry3);
-        useListMethods.print(entries4, entry4);
+        useAPIMethods.print(entries1, entry1);
+        useAPIMethods.print(entries2, entry2);
+        useAPIMethods.print(entries3, entry3);
+        useAPIMethods.print(entries4, entry4);
 
         // use class to create new directory
-        useListMethods.makeDirectory();
-        useListMethods.changeDirectory();
+        useAPIMethods.makeDirectory();
+        useAPIMethods.changeDirectory();
         
         // download files locally
-        useListMethods.downloadFiles(entries1);
-        useListMethods.downloadFiles(entries2);
-        useListMethods.downloadFiles(entries3);
-        useListMethods.downloadFiles(entries4);
-        useListMethods.clientClose();
+        useAPIMethods.downloadFiles(entries1);
+        useAPIMethods.downloadFiles(entries2);
+        useAPIMethods.downloadFiles(entries3);
+        useAPIMethods.downloadFiles(entries4);
+        useAPIMethods.clientClose();
 
         // disconnect from API
         client.close(); 

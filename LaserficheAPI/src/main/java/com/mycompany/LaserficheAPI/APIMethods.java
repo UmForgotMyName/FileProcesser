@@ -15,7 +15,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class listMethods {
+public class APIMethods {
     private static int i = 0;
 
     // create file path 
@@ -113,7 +113,6 @@ public class listMethods {
         System.out.println(String.format("\nEntry ID: %d, Name: %s, EntryType: %s, FullPath: %s",temp2.getId(), temp2.getName(), temp2.getEntryType(), temp2.getFullPath()));
         for (Entry childEntry : temp) {
             System.out.println(String.format("Child Entry ID: %d, Name: %s, EntryType: %s, FullPath: %s",childEntry.getId(), childEntry.getName(), childEntry.getEntryType(), childEntry.getFullPath()));
-            System.out.println("File Size: %d", childEntry.getName().length())
         }
     }
 }
