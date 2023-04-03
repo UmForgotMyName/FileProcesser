@@ -41,10 +41,10 @@ public class FileProcesser
                         }
                         else if(child.isDirectory())
                         {
-                            File[] temp = child.listFiles();
-                            for(File tempChild : temp)
-                                if(tempChild.length() == Length)
-                                    newFile.add(tempChild);
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -66,10 +66,10 @@ public class FileProcesser
                         }
                         else if(child.isDirectory())
                         {
-                            File[] temp = child.listFiles();
-                            for(File tempChild : temp)
-                                if(tempChild.length() != Length)
-                                    newFile.add(tempChild);
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -91,10 +91,10 @@ public class FileProcesser
                         }
                         else if(child.isDirectory())
                         {
-                            File[] temp = child.listFiles();
-                            for(File tempChild : temp)
-                                if(tempChild.length() > Length)
-                                    newFile.add(tempChild);
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -116,10 +116,10 @@ public class FileProcesser
                         }
                         else if(child.isDirectory())
                         {
-                            File[] temp = child.listFiles();
-                            for(File tempChild : temp)
-                                if(tempChild.length() >= Length)
-                                    newFile.add(tempChild);
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -141,10 +141,10 @@ public class FileProcesser
                         }
                         else if(child.isDirectory())
                         {
-                            File[] temp = child.listFiles();
-                            for(File tempChild : temp)
-                                if(tempChild.length() < Length)
-                                    newFile.add(tempChild);
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -166,10 +166,10 @@ public class FileProcesser
                         }
                         else if(child.isDirectory())
                         {
-                            File[] temp = child.listFiles();
-                            for(File tempChild : temp)
-                                if(tempChild.length() <= Length)
-                                    newFile.add(tempChild);
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -241,7 +241,7 @@ public class FileProcesser
                     // Checks if it is a directory
                     else if(child.isDirectory())
                     {
-                        // Goes through each file of the directory
+                        // Goes through each file of the directory as a recursive function
                         List<File> tempList = Arrays.asList(child.listFiles());
                         tempList = filterCount(tempList, key, value);
                         for(File tempChild : tempList)
@@ -269,10 +269,10 @@ public class FileProcesser
         dirList.add(new File("C:\\Users\\hasan\\OneDrive\\Desktop\\Programming2\\Java\\Processing Files"));
         
         System.out.println("List of length: ");
-        printList(filterLength(dirList ,109  , "EQ"));
+        printList(filterLength(dirList ,19209  , "EQ"));
         
         System.out.println("List of count: ");
-        printList(filterCount(dirList, "hasana", 2));
+        printList(filterCount(dirList, "hasana", 1));
         
     }
 }
