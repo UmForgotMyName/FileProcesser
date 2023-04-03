@@ -11,12 +11,16 @@ public class RemoteInstructions extends Instructions {
 		
 	}
 
+	public void print() {
+		System.out.print("hello");
+	}
 	public String getRepositoryId() {
 		return repositoryId;
 	}
-
+	
 	public String getEntryId() {
 		return entryId;
 	}
+
 
 }

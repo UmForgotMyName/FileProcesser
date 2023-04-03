@@ -13,7 +13,7 @@ import org.json.simple.parser.ParseException;
 
 
 
-public class Instructions {
+public abstract class Instructions {
 	
 	//Location, path and processes should never be updated
 	private final JSONArray processingElements;
@@ -25,9 +25,7 @@ public class Instructions {
 		
 	
 	
-	public void print() {
-		System.out.println("Parent");
-	}
+	public abstract void print();
 	
 	
 	//Static method to determine if we should create instance of local or remote instructions
