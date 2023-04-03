@@ -24,8 +24,7 @@ public class FileProcesser {
 
     public static List<File> filterName(List<File> entries, String key) {
         for (int i = 0; i < entries.size(); i++) {
-            if (!entries.get(i).getName().equals(key)) {
-                //entries.get(i).delete(); not sure if this is needed
+            if (!entries.get(i).getName().contains(key)) {
                 entries.remove(i);
             }
         }
@@ -46,7 +45,6 @@ public class FileProcesser {
                     }
 
                     if (!flag) {
-                        //entries.get(i).delete(); not sure if this is needed
                         entries.remove(i);
                     }
 
@@ -55,7 +53,6 @@ public class FileProcesser {
                 }
 
             } else {
-                //entries.get(i).delete(); not sure if this is needed
                 entries.remove(i);
             }
         }
