@@ -259,6 +259,86 @@ public class FileProcesser
         }
 }
 
+    
+    /*
+    
+    REHANS CODE
+    
+    */
+    public static List<File> filterName(List<File> entries, String key) {
+        List<File> newFile = new ArrayList<File>();
+        for (File entry : entries)
+        {
+            if(entry.isFile())
+            {
+                if (entry.getName().contains(key))
+                {
+                    newFile.add(entry);
+                }
+            }
+            else if(entry.isDirectory())
+            {
+                List<File> tempList = Arrays.asList(entry.listFiles());
+                tempList = filterName(tempList,key);
+                for (File tempChild: tempList)
+                    newFile.add(tempChild);
+            }
+            
+        }
+        return newFile;
+    }
+    
+    public static List<File> filterContent(List<File> entries, String key) throws IOException
+    {
+        List<File> newFile = new ArrayList<File>();
+        Outer:
+        for (File entry : entries) 
+        {
+            if (entry.isFile()) 
+            {
+                // Create buffered reader object
+                        BufferedReader br = new BufferedReader(new FileReader(entry));
+                        // Initalize line string
+                        String line;
+                        // A while loop that ends if the file does not contain another line
+                        while ((line = br.readLine()) != null) 
+                        {
+                            // Split the words by space
+                            String[] words = line.split(" ");
+
+                            // For each loop to loop through every word in the file
+                            for (String word : words) 
+                            {
+                                // If the word occurs in the file, increment keyCounter by one
+                                if (word.equals(key))
+                                {
+                                    newFile.add(entry);
+                                    continue Outer;
+                                }
+                            }
+                        }
+                        // Close buffered reader
+                        br.close();
+            }
+            
+            else if(entry.isDirectory())
+            {
+                List<File> tempList = Arrays.asList(entry.listFiles());
+                tempList = filterContent(tempList,key);
+                for (File tempChild: tempList)
+                    newFile.add(tempChild);
+            }
+        }
+        return newFile;
+    }
+    
+    /*
+    
+    END OF REHANS CODE
+    
+    */
+    
+    
     /*
     Not needed in the final bit, simply here for testing
     The code works if parameters are correct, use the following to test
