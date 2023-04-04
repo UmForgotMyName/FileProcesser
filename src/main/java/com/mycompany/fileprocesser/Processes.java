@@ -15,8 +15,8 @@ public class Processes {
 	
 	
 	//**********************FILTER METHOD BY LENGTH*********************************************
-	 // Method to filter the files by length (size in bytes)
-    public static List<File> filterLength(List<File> file, long Length, String Operator)
+	// Method to filter the files by length (size in bytes)
+    public static List<File> filterLength (List<File> file, long Length, String Operator)
     {
         // Create a list of file entries
         List<File> newFile = new ArrayList<File>();
@@ -30,9 +30,16 @@ public class Processes {
                 {
                     for (File child : file)
                     {
-                        if(child.length() == Length)
+                        if(child.length() == Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -42,15 +49,22 @@ public class Processes {
                 }
                 break;
             
-            // Case for not equals operatorsure
+            // Case for not equals operator
             case "NEQ":
                 if (file != null)
                 {
                     for (File child : file)
                     {
-                        if(child.length() != Length)
+                        if(child.length() != Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -66,9 +80,16 @@ public class Processes {
                 {
                     for (File child : file)
                     {
-                        if(child.length() > Length)
+                        if(child.length() > Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -84,9 +105,16 @@ public class Processes {
                 {
                     for (File child : file)
                     {
-                        if(child.length() >= Length)
+                        if(child.length() >= Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -102,9 +130,16 @@ public class Processes {
                 {
                     for (File child : file)
                     {
-                        if(child.length() < Length)
+                        if(child.length() < Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -120,9 +155,16 @@ public class Processes {
                 {
                     for (File child : file)
                     {
-                        if(child.length() <= Length)
+                        if(child.length() <= Length && child.isFile())
                         {
                             newFile.add(child);
+                        }
+                        else if(child.isDirectory())
+                        {
+                            List<File> tempList = Arrays.asList(child.listFiles());
+                            tempList = filterLength(tempList, Length, Operator);
+                            for(File tempChild : tempList)
+                                newFile.add(tempChild);
                         }
                     }
                 }
@@ -136,9 +178,6 @@ public class Processes {
         // Return list with new file(s)
         return newFile;
     }
-    
-	
-	
 	
 	
   //**********************FILTER METHOD BY KEYWORD COUNT*********************************************
@@ -152,50 +191,69 @@ public class Processes {
         // Initalize keyCounter to be equal to 0
         int keyCounter = 0;
         
-        // Check if file exists
-        if (file != null) 
+        // Checks if value is greater than 0
+        if(value<=0)
         {
-            // Read every file within the directory (works for individual file)
-            for (File child : file) 
+            System.out.println("An error has occured, returning original file");
+            return file;
+        }
+        else
+        {
+            // Check if file exists
+            if (file != null) 
             {
-                // Create buffered reader object
-                BufferedReader br = new BufferedReader(new FileReader(child));
-                
-                // Initalize line string
-                String line;
-                
-                // A while loop that ends if the file does not contain another line
-                while ((line = br.readLine()) != null) 
+                // Read every file within the directory (works for individual file)
+                for (File child : file) 
                 {
-                    // Split the words by space
-                    String[] words = line.split(" ");
-                    
-                    // For each loop to loop through every word in the file
-                    for (String word : words) 
+                    // Checks if it is a file
+                    if(child.isFile())
                     {
-                        // If the word occurs in the file, increment keyCounter by one
-                        if (word.equals(key))
-                            keyCounter++;
+                        // Create buffered reader object
+                        BufferedReader br = new BufferedReader(new FileReader(child));
+                        // Initalize line string
+                        String line;
+                        // A while loop that ends if the file does not contain another line
+                        while ((line = br.readLine()) != null) 
+                        {
+                            // Split the words by space
+                            String[] words = line.split(" ");
+
+                            // For each loop to loop through every word in the file
+                            for (String word : words) 
+                            {
+                                // If the word occurs in the file, increment keyCounter by one
+                                if (word.equals(key))
+                                    keyCounter++;
+                            }
+                        }
+                        // Close buffered reader
+                        br.close();
+
+                        // Checks if the word is said a specified amount of times
+                        if (keyCounter >= value)
+                        newFile.add(child);
+                        keyCounter = 0;
+                    }
+
+                    // Checks if it is a directory
+                    else if(child.isDirectory())
+                    {
+                        // Goes through each file of the directory as a recursive function
+                        List<File> tempList = Arrays.asList(child.listFiles());
+                        tempList = filterCount(tempList, key, value);
+                        for(File tempChild : tempList)
+                            newFile.add(tempChild);
                     }
                 }
-                
-                // Close buffered reader
-                br.close();
-                
-                // Checks if the word is said a specified amount of times
-                if (keyCounter >= value)
-                    newFile.add(child);
-                keyCounter = 0;
-            }
-            
-        } 
-        // Print error message if error has occurred
-        else 
-            {
-                System.out.println("An error has occurred!");
-            }
-    // Return new file
-    return newFile;
+            } 
+            // Print error message if error has occured
+            else 
+                {
+                    System.out.println("An error has occurred!");
+                }
+            // Return new file
+            return newFile;
+        }
 }
 	
     //**********************LIST METHOD*********************************************
@@ -229,7 +287,6 @@ public class Processes {
 }
     
     //**********************RENAME METHOD*********************************************
-    
     //Rename method which adds a suffix to the file name 
     public static List<File> renameMethod(List<File> entries, String suffix) throws IOException {
     List<File> result = new ArrayList<>();//Result arraylist which stores updated arraylist
@@ -242,10 +299,16 @@ public class Processes {
             String baseName = parts[0];
             String extension = "." + parts[1];
             String newName = baseName + suffix + extension;//newname string holds updated name
+            
+            
             File newFile = new File(entry.getParent(), newName);
-            result.add(newFile);//Add updated arraylist to result array
-        //If entry is a directory, program searches in directory and lists individual files
-        } else if (entry.isDirectory()) {
+            if (entry.renameTo(newFile)) {
+            	result.add(newFile);
+            } else {
+            	throw new IOException("Failed to rename file: " + entry.getAbsolutePath());
+            }
+            //If entry is a directory, program searches in directory and lists individual files
+        	} else if (entry.isDirectory()) {
 
              List<File> tempList = Arrays.asList(entry.listFiles());
            tempList=renameMethod(tempList,suffix);
@@ -256,82 +319,93 @@ public class Processes {
             }
         }
     }
-  //program returns updated arraylist with set changes 
+    //program returns updated arraylist with set changes 
     return result;
-}   
+}
 
    
    
    
    //**********************FILTER BY NAME METHOD*********************************************
-   public static List<File> filterName(List<File> entries, String key) {
-       for (int i = 0; i < entries.size(); i++) {
-           if (!entries.get(i).getName().contains(key)) {
-               entries.remove(i);
-           }
-       }
-       return entries;
-   }
+
+    public static List<File> filterName(List<File> entries, String key) {
+        List<File> newFile = new ArrayList<File>();
+        for (File entry : entries)
+        {
+            if(entry.isFile())
+            {
+                if (entry.getName().contains(key))
+                {
+                    newFile.add(entry);
+                }
+            }
+            else if(entry.isDirectory())
+            {
+                List<File> tempList = Arrays.asList(entry.listFiles());
+                tempList = filterName(tempList,key);
+                for (File tempChild: tempList)
+                    newFile.add(tempChild);
+            }
+            
+        }
+        return newFile;
+    }
 
    //**********************FILTER BY CONTENT METHOD*********************************************
-   public static List<File> filterContent(List<File> entries, String key) {
-       for (int i = 0; i < entries.size(); i++) {
-           if (entries.get(i).isFile()) {
-               try (BufferedReader reader = new BufferedReader(new FileReader(entries.get(i)))) {
-                   String line;
-                   boolean flag = false;
-                   while ((line = reader.readLine()) != null) {
-                       if (line.contains(key)) {
-                           flag = true;
-                           break;
-                       }
-                   }
+    public static List<File> filterContent(List<File> entries, String key) throws IOException
+    {
+        List<File> newFile = new ArrayList<File>();
+        Outer:
+        for (File entry : entries) 
+        {
+            if (entry.isFile()) 
+            {
+                // Create buffered reader object
+                        BufferedReader br = new BufferedReader(new FileReader(entry));
+                        // Initalize line string
+                        String line;
+                        // A while loop that ends if the file does not contain another line
+                        while ((line = br.readLine()) != null) 
+                        {
+                            // Split the words by space
+                            String[] words = line.split(" ");
 
-                   if (!flag) {
-                       entries.remove(i);
-                   }
-
-               } catch (IOException e) {
-                   e.printStackTrace();
-               }
-
-           } else {
-               entries.remove(i);
-           }
-       }
-       return entries;
-   }
-    
-   
+                            // For each loop to loop through every word in the file
+                            for (String word : words) 
+                            {
+                                // If the word occurs in the file, increment keyCounter by one
+                                if (word.equals(key))
+                                {
+                                    newFile.add(entry);
+                                    continue Outer;
+                                }
+                            }
+                        }
+                        // Close buffered reader
+                        br.close();
+            }
+            
+            else if(entry.isDirectory())
+            {
+                List<File> tempList = Arrays.asList(entry.listFiles());
+                tempList = filterContent(tempList,key);
+                for (File tempChild: tempList)
+                    newFile.add(tempChild);
+            }
+        }
+        return newFile;
+    }
    
    
    
    
    //**********************************SPLIT METHOD*********************************************
-   /**
-    * This method splits the files in the input list and stores the resulting files in an output list.
-    * @param entries A list of files to be split
-    * @param lines   The number of lines each split file should contain
-    * @return A list of files containing the split files
-    * @throws IOException if an I/O error occurs
-    */
+
     public static List<File> FileSplit(List<File> entries, int lines) throws IOException 
     {
         // Split files and store in output list
-        List<File> result = new ArrayList<>();
-        for(int i = 0; i < entries.size(); i++)
-        {
-            if((entries.get(i)).isDirectory())
-            {
-                File[] temp = entries.get(i).listFiles();
-                for (int j = 0; j < temp.length; j++) {
-                    entries.add(temp[j]);
-                }
-                entries.remove(i);
-                FileSplit(entries, lines);
-            }
-        }
-
+        List<File> result = new ArrayList<File>();
+        
         for (File entry : entries) 
         {
             if (entry.isFile()) 
@@ -380,13 +454,17 @@ public class Processes {
                         }
                     }
                 }
-                reader.close();
+            }
+            else if(entry.isDirectory())
+            {
+                List<File> tempList = Arrays.asList(entry.listFiles());
+                tempList = FileSplit(tempList,lines);
+                for (File tempChild: tempList)
+                    result.add(tempChild);
             }
         }
-       
         return result;
     }
-   
    
   
    

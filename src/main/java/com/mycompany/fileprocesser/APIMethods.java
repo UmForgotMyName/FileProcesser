@@ -10,22 +10,22 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.Files; // import for downloading to loca
+import java.nio.file.Path; // import for downloading to local
+import java.nio.file.Paths; // import for downloading to local
+import java.nio.file.StandardCopyOption; // import for downloading to local
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class APIMethods {
+    // Declare ArrayList to store exported files
+    static ArrayList <File> exportedFiles = new ArrayList<>();
     private static int i = 0;
-    private static String tempPath = "";
+
     // create file path 
     static String path = System.getProperty("user.dir");
-    static String filePath1 = "path/GeoNames";
-    static String filePath2 = "path/Names";
-    static String filePath3 = "path/PrimeNumbers";
-    static String filePath4 = "path/RandomText";
+    static String filePath = "path/DownloadedFiles";
     static String fileOriginPath = path;
 
     // access Laserfiche repository
@@ -38,22 +38,10 @@ public class APIMethods {
     // create new folder for files to be stored locally
     public void makeDirectory(){
         // Create new directory
-        for (int j = 0; j <= 3; j++){
-            if (j == 0){
-                tempPath = filePath1;
-            }
-            else if (j == 1){
-                tempPath = filePath2;
-            }
-            else if (j == 2){
-                tempPath = filePath3;
-            }
-            else if (j == 3){
-                tempPath = filePath4;
-            }            
-        tempPath = tempPath.replace("path", path);// replace user computer name into filePath
+        filePath = filePath.replace("path", path);// replace user computer name into filePath
+//        fileOriginPath = fileOriginPath.replace("userID", userName);// replace user computer name into filePath
 
-        File dir = new File(tempPath);
+        File dir = new File(filePath);
         if (!dir.exists()) {
             boolean result = dir.mkdirs();
             if (result) {
@@ -65,30 +53,31 @@ public class APIMethods {
         }
         else {
             System.out.println("\nDirectory already exists.");
-        }
-        }
+        } 
     }
     
-    // change between new file directory and original directory
+//    // change between new file directory and original directory
 //    public void changeDirectory(){
-//        System.setProperty("user.dir", *insert path*);
+//        System.setProperty("user.dir", filePath);
 //        System.out.println("Current Directory: " +System.getProperty("user.dir"));
 //    }
     
-    public void downloadFiles(List<Entry> temp, Entry temp2){
+        // Rest of the code
+
+    public void downloadFiles(List<Entry> temp){
         // loop through all child entries
         for (Entry childEntry : temp) {
             // create and modify file based on entry Id
-            int entryIdToDownload = childEntry.getId(); // pass child Id
-            String FILE_NAME = "entryIDnum.txt"; // file name template
-            String fileNum = String.valueOf(childEntry.getId()); // store entry Id
-            FILE_NAME = FILE_NAME.replace("num", fileNum);// replace entry Id into new file name
+            int entryIdToDownload = childEntry.getId();
+            String FILE_NAME = "entryIDnum.txt";
+            String fileNum = String.valueOf(childEntry.getId());
+            FILE_NAME = FILE_NAME.replace("num", fileNum);
             String[] fileNames = new String[100];
-            fileNames[i] = FILE_NAME; // finalize file name
+            fileNames[i] = FILE_NAME;
 
             // actually download file
             Consumer<InputStream> consumer = inputStream -> {
-                File exportedFile = new File(fileNames[i]); // idk why it wont take the FILE_NAME directly
+                File exportedFile = new File(fileNames[i]);
                 try (FileOutputStream outputStream = new FileOutputStream(exportedFile)) {
                     byte[] buffer = new byte[1024];
                     while (true) {
@@ -98,6 +87,8 @@ public class APIMethods {
                         }
                         outputStream.write(buffer, 0, length);
                     }
+                    // Add exported file to ArrayList
+                    exportedFiles.add(exportedFile);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -108,45 +99,46 @@ public class APIMethods {
                     }
                 }
             };
+            
             // export file
             client.getEntriesClient().exportDocument(repositoryId, entryIdToDownload, null, consumer).join();
 
+// comment out to not store files locally to directory
             // move files into created directory
-            if (null != temp2.getName()) 
-            switch (temp2.getName()) {
-                case "GeoNames":
-                    tempPath = filePath1;
-                    break;
-                case "Names":
-                    tempPath = filePath2;
-                    break;
-                case "PrimeNumbers":
-                    tempPath = filePath3;
-                    break;
-                case "RandomText":
-                    tempPath = filePath4;
-                    break;
-                default:
-                    break;
-            }
             Path source = Paths.get(fileOriginPath + "/" + fileNames[i]);
-            tempPath = tempPath.replace("path", path);// replace user computer name into filePath
-            Path target = Paths.get(tempPath + "/" + fileNames[i]);
+            Path target = Paths.get(filePath + "/" + fileNames[i]);
             try {
                 Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-            i++;
+            } 
+
         }
     }
     
+    // close connection to API
     public void clientClose(){
         client.close();
     }
     
+    // return file list to use as paramter
+    public static List <File> returnList(){
+    List <File> newFile = new ArrayList <File> ();
+    
+    // save array list to new list
+    for (File stored : exportedFiles) 
+        {		      
+            newFile.add(stored);
+        }
+    return newFile;
+    }
+    
+    // print file data
     public void print(List<Entry> temp, Entry temp2){
+        // print repo folder data
         System.out.println(String.format("\nEntry ID: %d, Name: %s, EntryType: %s, FullPath: %s",temp2.getId(), temp2.getName(), temp2.getEntryType(), temp2.getFullPath()));
+        
+        // access and print repo child file data
         for (Entry childEntry : temp) {
             System.out.println(String.format("Child Entry ID: %d, Name: %s, EntryType: %s, FullPath: %s, File Size (bytes): %d",childEntry.getId(), childEntry.getName(), childEntry.getEntryType(), childEntry.getFullPath(), childEntry.getName().length()));
         }

@@ -19,14 +19,16 @@ public class FileProcesser {
 	
 	
     public static void main(String[] args) throws IOException {       
-    	String filePath = new String("/home/tyler/Desktop/Test_Scenario2.txt");
+    	String filePath = new String("/home/tyler/Desktop/Test_Scenario3.txt");
     	Instructions instructions = (Instructions.getLocation(filePath).matches("local"))
     			? new LocalInstructions(filePath) : new RemoteInstructions(filePath);
     	
+    	
     	List<File> files = instructions.getInitialFiles();
-    
+    	
     	
 		List<File> finalFiles = ControlSequence.applyProcesses(instructions, files);
+		System.out.println(finalFiles.size());
     
     	
     }
