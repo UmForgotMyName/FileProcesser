@@ -19,7 +19,7 @@ public class RemoteInstructions extends Instructions {
 	@Override
 	public List<File> getInitialFiles() {
 		// TODO Auto-generated method stub
-		return APIMethods.returnList(); 
+		return LaserficheAPI.getFolders(); 
 	}
 	
 	

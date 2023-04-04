@@ -7,10 +7,11 @@ import com.laserfiche.repository.api.RepositoryApiClientImpl;
 import com.laserfiche.repository.api.clients.impl.model.Entry;
 import com.laserfiche.repository.api.clients.impl.model.ODataValueContextOfIListOfEntry;
 
+import java.io.File;
 import java.util.List;
 
 public class LaserficheAPI {
-    public static void main(String[] args) {
+    public static List<File> getFolders() {
         // Access Laserfiche API
         final String servicePrincipalKey = "5Yx6jm1xDBV8k-InPeff";
         final String accessKeyBase64 = "ewoJImN1c3RvbWVySWQiOiAiMTQwMTM1OTIzOCIsCgkiY2xpZW50SWQiOiAiM2JiODdlM2EtOGViOS00YWE4LTljMDEtOTlhZjUwYzQwMTUxIiwKCSJkb21haW4iOiAibGFzZXJmaWNoZS5jYSIsCgkiandrIjogewoJCSJrdHkiOiAiRUMiLAoJCSJjcnYiOiAiUC0yNTYiLAoJCSJ1c2UiOiAic2lnIiwKCQkia2lkIjogImI2S1d2WWJaZkpYNkhPVndLY0Jra2s2elRoSHRPQ2xBY0h2eEN3SDlmcjgiLAoJCSJ4IjogImZrbW5QVEhjWVV5VHlEUTlLOGZSMG5BWlhMWkxlcy1NaVg3dW5wYnZNRlkiLAoJCSJ5IjogIkE1bklIbHFHU0lKSWE2VHF2Ym9WYWNNMUZUZThYYk41SGRiUW05cGZaNDQiLAoJCSJkIjogIm9pTzhnSUtkZ3FKTTQzeFVtMzRQOVcwXzBXanJWRUM0VVFIMG9YY2FXNVEiLAoJCSJpYXQiOiAxNjc3Mjk3MjcxCgl9Cn0=";
@@ -47,12 +48,12 @@ public class LaserficheAPI {
         // create list methods object
         APIMethods useAPIMethods = new APIMethods();
 
-        // print entry data sets
+        /*
         useAPIMethods.print(entries1, entry1);
         useAPIMethods.print(entries2, entry2);
         useAPIMethods.print(entries3, entry3);
         useAPIMethods.print(entries4, entry4);
-
+            */
         // use class to create new directory 
         useAPIMethods.makeDirectory();
 //        useAPIMethods.changeDirectory();
@@ -67,10 +68,11 @@ public class LaserficheAPI {
         useAPIMethods.clientClose();
         
         // get file list
-        useAPIMethods.returnList();
+        List<File> returnFiles = useAPIMethods.returnList();
 
         // disconnect from API
         client.close(); 
+        return returnFiles;
     }
     
 }

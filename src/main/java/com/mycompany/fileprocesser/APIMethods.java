@@ -1,7 +1,5 @@
 package com.mycompany.fileprocesser;
 
-
-
 import com.laserfiche.api.client.model.AccessKey;
 import com.laserfiche.repository.api.RepositoryApiClient;
 import com.laserfiche.repository.api.RepositoryApiClientImpl;
@@ -20,12 +18,12 @@ import java.util.function.Consumer;
 
 public class APIMethods {
     // Declare ArrayList to store exported files
-    static ArrayList <File> exportedFiles = new ArrayList<>();
+    ArrayList <File> exportedFiles = new ArrayList<>();
     private static int i = 0;
 
     // create file path 
     static String path = System.getProperty("user.dir");
-    static String filePath = "path/DownloadedFiles";
+    static String filePath = "path/Downloads";
     static String fileOriginPath = path;
 
     // access Laserfiche repository
@@ -122,7 +120,7 @@ public class APIMethods {
     }
     
     // return file list to use as paramter
-    public static List <File> returnList(){
+    public List <File> returnList(){
     List <File> newFile = new ArrayList <File> ();
     
     // save array list to new list
