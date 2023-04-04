@@ -15,11 +15,13 @@ import org.json.simple.parser.ParseException;
 
 public abstract class Instructions {
 	
-	//Location, path and processes should never be updated
-	private final JSONArray processingElements;
+	//Location and processes should never be updated
+	protected final String locationType;
+	protected final JSONArray processingElements;
 	
 	//Constructor for instructions object
 	public Instructions(String filePath) {
+			this.locationType = getLocation(filePath);
 			this.processingElements = getProcessingElements(storeJSON(filePath));
 		}
 		
@@ -76,13 +78,33 @@ public abstract class Instructions {
 	}
 	
 	//Return an array of JSON objects of all parameters for a certain process
-	protected JSONArray getParameters(JSONObject obj) {
+	public static JSONArray getParameters(JSONObject obj) {
 		JSONArray elements = (JSONArray) obj.get("parameters");
 		return elements;
 		
 	}
-
-
+	
+	//Passed a parameter JSOn object and returns it's value key
+	public static String getParamValue(JSONObject obj) {
+		return (String) obj.get("value");
+		
+	}
+	
+	//WORKS
+	//Returns parameter values directly from processing elements
+	public static String processToParamValue(JSONObject process) {
+		JSONObject param = (JSONObject) (getParameters(process).get(0));
+		return (String) param.get("value");
+		
+	}
+	
+	//WORKS
+	//Returns specifically indexed parameter values directly from processing elements
+	public static String processToParamValue(JSONObject process, int i) {
+		JSONObject param = (JSONObject) (getParameters(process).get(i));
+		return (String) param.get("value");
+		
+	}
 
 
 	

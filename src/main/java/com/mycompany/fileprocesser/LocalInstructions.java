@@ -15,7 +15,7 @@ public class LocalInstructions extends Instructions {
 	}
 
 	public void print() {
-		System.out.println("Child");
+		System.out.println(this.locationType);
 	}
 
 

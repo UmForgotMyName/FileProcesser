@@ -12,7 +12,7 @@ public class RemoteInstructions extends Instructions {
 	}
 
 	public void print() {
-		System.out.print("hello");
+		System.out.print(this.locationType);
 	}
 	public String getRepositoryId() {
 		return repositoryId;
