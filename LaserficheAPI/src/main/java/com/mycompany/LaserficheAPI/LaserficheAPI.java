@@ -36,7 +36,7 @@ public class LaserficheAPI {
         ODataValueContextOfIListOfEntry result2 = client.getEntriesClient().getEntryListing(repositoryId, rootEntryId2, true, null, null, null, null, null, "name", null, null, null).join();
         ODataValueContextOfIListOfEntry result3 = client.getEntriesClient().getEntryListing(repositoryId, rootEntryId3, true, null, null, null, null, null, "name", null, null, null).join();
         ODataValueContextOfIListOfEntry result4 = client.getEntriesClient().getEntryListing(repositoryId, rootEntryId4, true, null, null, null, null, null, "name", null, null, null).join();
-                
+        
         // create entry lists
         List<Entry> entries1 = result1.getValue();
         List<Entry> entries2 = result2.getValue();
@@ -52,16 +52,21 @@ public class LaserficheAPI {
         useAPIMethods.print(entries3, entry3);
         useAPIMethods.print(entries4, entry4);
 
-        // use class to create new directory
-        useAPIMethods.makeDirectory();
-//        useAPIMethods.changeDirectory(); // use if needed to swap between directories
+        // use class to create new directory 
+//        useAPIMethods.makeDirectory();
+//        useAPIMethods.changeDirectory();
         
         // download files locally
-        useAPIMethods.downloadFiles(entries1, entry1);
-        useAPIMethods.downloadFiles(entries2, entry2);
-        useAPIMethods.downloadFiles(entries3, entry3);
-        useAPIMethods.downloadFiles(entries4, entry4);
+        useAPIMethods.downloadFiles(entries1);
+        useAPIMethods.downloadFiles(entries2);
+        useAPIMethods.downloadFiles(entries3);
+        useAPIMethods.downloadFiles(entries4);
+        
+        // stop accessing API
         useAPIMethods.clientClose();
+        
+        // get file list
+        useAPIMethods.returnList();
 
         // disconnect from API
         client.close(); 
