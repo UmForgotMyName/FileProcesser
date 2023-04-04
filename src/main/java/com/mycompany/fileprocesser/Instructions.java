@@ -1,8 +1,10 @@
 package com.mycompany.fileprocesser;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 
 import org.json.simple.JSONArray;
@@ -26,8 +28,7 @@ public abstract class Instructions {
 		}
 		
 	
-	
-	public abstract void print();
+	public abstract List<File> getInitialFiles();
 	
 	
 	//Static method to determine if we should create instance of local or remote instructions

@@ -19,18 +19,19 @@ public class FileProcesser {
 	
 	
     public static void main(String[] args) throws IOException {       
-    	String filePath = new String("/home/tyler/Desktop/Test_Scenario.json");
+    	String filePath = new String("/home/tyler/Desktop/Test_Scenario.txt");
     	Instructions instructions = (Instructions.getLocation(filePath).matches("local"))
     			? new LocalInstructions(filePath) : new RemoteInstructions(filePath);
     	
-    	List<File> files = ControlSequence.storeFiles("/home/tyler/Desktop/ExportedFolderContents");
+    	List<File> files = instructions.getInitialFiles();
     	
-    	 System.out.println(ControlSequence.getMode((JSONObject) (instructions.processingElements).get(1)));
+    	 //System.out.println(ControlSequence.getMode((JSONObject) (instructions.processingElements).get(1)));
     
-		List<File> files2 = Processes.ListMethod(files, 10);
+		List<File> finalFiles = ControlSequence.applyProcesses(instructions, files);
 		
-		System.out.println(Instructions.processToParamValue((JSONObject) (instructions.processingElements).get(1)));
-		System.out.println(Instructions.processToParamValue((JSONObject) (instructions.processingElements).get(1), 1));
+		
+		//System.out.println(Instructions.processToParamValue((JSONObject) (instructions.processingElements).get(0)));
+		//System.out.println(Instructions.processToParamValue((JSONObject) (instructions.processingElements).get(1), 1));
     	
     
     	

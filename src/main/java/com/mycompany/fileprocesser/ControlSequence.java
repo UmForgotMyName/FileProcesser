@@ -14,7 +14,7 @@ public class ControlSequence {
 		List<File> finalFiles = files;
 		
 		//For each processing element call the funcCall method and update finalList
-		for (int i = 1; i < instructions.processingElements.size(); i++) {
+		for (int i = 0; i < instructions.processingElements.size(); i++) {
 			JSONObject process = (JSONObject) instructions.processingElements.get(i);
 			List<File> temp = funcCall(getMode(process), process, finalFiles);
 			finalFiles = temp;
@@ -22,18 +22,6 @@ public class ControlSequence {
 		
 		return finalFiles;
 	}
-	
-	
-	public static List<File> storeFiles(String path){
-		List<File> files = new ArrayList<File>();
-		files.add(new File(path));
-		return files;
-	}
-	
-	
-
-	
-	
 	
 	
 	public static String getMode(JSONObject process) {

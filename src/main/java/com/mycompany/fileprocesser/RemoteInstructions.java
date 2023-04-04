@@ -1,5 +1,8 @@
 package com.mycompany.fileprocesser;
 
+import java.io.File;
+import java.util.List;
+
 public class RemoteInstructions extends Instructions {
 	private final String repositoryId;
 	private final String entryId;
@@ -11,9 +14,17 @@ public class RemoteInstructions extends Instructions {
 		
 	}
 
-	public void print() {
-		System.out.print(this.locationType);
+	
+	
+	@Override
+	public List<File> getInitialFiles() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+	
+	
+	
+	
 	public String getRepositoryId() {
 		return repositoryId;
 	}
@@ -21,6 +32,12 @@ public class RemoteInstructions extends Instructions {
 	public String getEntryId() {
 		return entryId;
 	}
+
+
+
+
+
+	
 
 
 }
