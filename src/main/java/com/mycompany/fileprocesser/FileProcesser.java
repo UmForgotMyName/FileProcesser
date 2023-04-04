@@ -67,8 +67,14 @@ public class FileProcesser {
             String baseName = parts[0];
             String extension = "." + parts[1];
             String newName = baseName + suffix + extension;//newname string holds updated name
+            
+            
             File newFile = new File(entry.getParent(), newName);
-            result.add(newFile);//Add updated arraylist to result array
+if (entry.renameTo(newFile)) {
+    result.add(newFile);
+} else {
+    throw new IOException("Failed to rename file: " + entry.getAbsolutePath());
+}
         //If entry is a directory, program searches in directory and lists individual files
         } else if (entry.isDirectory()) {
 
@@ -83,5 +89,5 @@ public class FileProcesser {
     }
     //program returns updated arraylist with set changes 
     return result;
-}   
+}
 }
