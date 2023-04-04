@@ -54,11 +54,11 @@ public class APIMethods {
         } 
     }
     
-    // change between new file directory and original directory
-    public void changeDirectory(){
-        System.setProperty("user.dir", filePath);
-        System.out.println("Current Directory: " +System.getProperty("user.dir"));
-    }
+//    // change between new file directory and original directory
+//    public void changeDirectory(){
+//        System.setProperty("user.dir", filePath);
+//        System.out.println("Current Directory: " +System.getProperty("user.dir"));
+//    }
     
         // Rest of the code
 
