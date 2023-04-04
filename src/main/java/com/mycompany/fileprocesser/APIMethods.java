@@ -1,6 +1,7 @@
 package com.mycompany.fileprocesser;
 
 
+
 import com.laserfiche.api.client.model.AccessKey;
 import com.laserfiche.repository.api.RepositoryApiClient;
 import com.laserfiche.repository.api.RepositoryApiClientImpl;
@@ -18,10 +19,13 @@ import java.util.function.Consumer;
 
 public class APIMethods {
     private static int i = 0;
-
+    private static String tempPath = "";
     // create file path 
     static String path = System.getProperty("user.dir");
-    static String filePath = "path/DownloadedFiles";
+    static String filePath1 = "path/GeoNames";
+    static String filePath2 = "path/Names";
+    static String filePath3 = "path/PrimeNumbers";
+    static String filePath4 = "path/RandomText";
     static String fileOriginPath = path;
 
     // access Laserfiche repository
@@ -34,10 +38,22 @@ public class APIMethods {
     // create new folder for files to be stored locally
     public void makeDirectory(){
         // Create new directory
-        filePath = filePath.replace("path", path);// replace user computer name into filePath
-//        fileOriginPath = fileOriginPath.replace("userID", userName);// replace user computer name into filePath
+        for (int j = 0; j <= 3; j++){
+            if (j == 0){
+                tempPath = filePath1;
+            }
+            else if (j == 1){
+                tempPath = filePath2;
+            }
+            else if (j == 2){
+                tempPath = filePath3;
+            }
+            else if (j == 3){
+                tempPath = filePath4;
+            }            
+        tempPath = tempPath.replace("path", path);// replace user computer name into filePath
 
-        File dir = new File(filePath);
+        File dir = new File(tempPath);
         if (!dir.exists()) {
             boolean result = dir.mkdirs();
             if (result) {
@@ -49,16 +65,17 @@ public class APIMethods {
         }
         else {
             System.out.println("\nDirectory already exists.");
-        } 
+        }
+        }
     }
     
     // change between new file directory and original directory
-    public void changeDirectory(){
-        System.setProperty("user.dir", filePath);
-        System.out.println("Current Directory: " +System.getProperty("user.dir"));
-    }
+//    public void changeDirectory(){
+//        System.setProperty("user.dir", *insert path*);
+//        System.out.println("Current Directory: " +System.getProperty("user.dir"));
+//    }
     
-    public void downloadFiles(List<Entry> temp){
+    public void downloadFiles(List<Entry> temp, Entry temp2){
         // loop through all child entries
         for (Entry childEntry : temp) {
             // create and modify file based on entry Id
@@ -93,10 +110,28 @@ public class APIMethods {
             };
             // export file
             client.getEntriesClient().exportDocument(repositoryId, entryIdToDownload, null, consumer).join();
-            
+
             // move files into created directory
+            if (null != temp2.getName()) 
+            switch (temp2.getName()) {
+                case "GeoNames":
+                    tempPath = filePath1;
+                    break;
+                case "Names":
+                    tempPath = filePath2;
+                    break;
+                case "PrimeNumbers":
+                    tempPath = filePath3;
+                    break;
+                case "RandomText":
+                    tempPath = filePath4;
+                    break;
+                default:
+                    break;
+            }
             Path source = Paths.get(fileOriginPath + "/" + fileNames[i]);
-            Path target = Paths.get(filePath + "/" + fileNames[i]);
+            tempPath = tempPath.replace("path", path);// replace user computer name into filePath
+            Path target = Paths.get(tempPath + "/" + fileNames[i]);
             try {
                 Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
@@ -113,7 +148,7 @@ public class APIMethods {
     public void print(List<Entry> temp, Entry temp2){
         System.out.println(String.format("\nEntry ID: %d, Name: %s, EntryType: %s, FullPath: %s",temp2.getId(), temp2.getName(), temp2.getEntryType(), temp2.getFullPath()));
         for (Entry childEntry : temp) {
-            System.out.println(String.format("Child Entry ID: %d, Name: %s, EntryType: %s, FullPath: %s",childEntry.getId(), childEntry.getName(), childEntry.getEntryType(), childEntry.getFullPath()));
+            System.out.println(String.format("Child Entry ID: %d, Name: %s, EntryType: %s, FullPath: %s, File Size (bytes): %d",childEntry.getId(), childEntry.getName(), childEntry.getEntryType(), childEntry.getFullPath(), childEntry.getName().length()));
         }
     }
 }

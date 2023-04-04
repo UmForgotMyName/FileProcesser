@@ -201,69 +201,65 @@ public class Processes {
     //**********************LIST METHOD*********************************************
     //List method sorts the arraylist in regards to the max number
     public static List<File> ListMethod(List<File> entries, int max) throws IOException {
-        // Parameter consists of the the arraylist and the max value
-       List<File> result = new ArrayList<>();//Result arraylist which stores updated arraylist
-       for (int i = 0; i < entries.size(); i++) {
-           //statement if max value is 0
-           if (max == 0) {
-               break;
-           }
-           //statement if entry is a set of files
-           if (entries.get(i).isFile()) {
-               result.add(entries.get(i));
-               max--;
-               //statement if entry is a directory 
-           } else if (entries.get(i).isDirectory()) {
-               File[] temp = entries.get(i).listFiles();
-               for (int j = 0; j < temp.length; j++) {
-                   if (max == 0) {
-                       break;
-                   }
-                   result.add(temp[j]);
-                   max--;
-               }
-           }
-       }
-       //Program returns updated arraylist with set changes
-       return result;
-   }
-   
+    List<File> result = new ArrayList<>();//Result arraylist which stores updated arraylist
+    for (File entry : entries) {
+        //statement if max value is 0
+        if (max == 0) {
+            break;
+        }
+        //statement if entry is a file
+        if (entry.isFile()) {
+            result.add(entry);
+            max--;
+        }
+        //statement if entry is a directory 
+        else if (entry.isDirectory()) {
+            List<File> tempList = Arrays.asList(entry.listFiles());
+           tempList=ListMethod(tempList,max);
+            for (File child : tempList) {
+                if (max == 0) {
+                    break;
+                }
+                result.add(child);
+            }
+        }
+    }
+    //Program returns updated arraylist with set changes
+    return result;
+}
     
     //**********************RENAME METHOD*********************************************
-   //Rename method which adds a suffix to the file name 
-   public static List<File> RenameMethod(List<File> entries, String suffix) throws IOException {
-       List<File> result = new ArrayList<>();//Result arraylist which stores updated arraylist
-       //if entry is a file, rename method applies suffix to each individual file
-       for (int i = 0; i < entries.size(); i++) {
-           if (entries.get(i).isFile()) {
-               String fileName = entries.get(i).getName();
-               String[] parts = fileName.split("\\.");//Regular expression which looks for "." in file name
-               String baseName = parts[0];
-               String extension = "." + parts[1];
-               String newName = baseName + suffix + extension;//newname string holds updated name
-               File newFile = new File(entries.get(i).getParent(), newName);
-               result.add(newFile);//Add updated arraylist to result array
-               //If entry is a directory, program searches in directory and lists individual files
-           } else if (entries.get(i).isDirectory()) {
-               File[] temp = entries.get(i).listFiles();//temp storage for files in directory
-               //Rename methods applied to temp array which holds files 
-               for (int j = 0; j < temp.length; j++) {
-                   String fileName = temp[j].getName();
-                   String[] parts = fileName.split("\\.");
-                   String baseName = parts[0];
-                   String extension = "." + parts[1];
-                   String newName = baseName + suffix + extension;
-                   File newFile = new File(temp[j].getParent(), newName);
-                   result.add(newFile);//Result arraylist receives updated names 
-               }
-           }
-       }
-       //program returns updated arraylist with set changes 
-       return result;
-   }    
     
-	
-   
+    //Rename method which adds a suffix to the file name 
+    public static List<File> renameMethod(List<File> entries, String suffix) throws IOException {
+    List<File> result = new ArrayList<>();//Result arraylist which stores updated arraylist
+    //if entry is a file, rename method applies suffix to each individual file
+    for (int i = 0; i < entries.size(); i++) {
+        File entry = entries.get(i);
+        if (entry.isFile()) {
+            String fileName = entry.getName();
+            String[] parts = fileName.split("\\.");//Regular expression which looks for "." in file name
+            String baseName = parts[0];
+            String extension = "." + parts[1];
+            String newName = baseName + suffix + extension;//newname string holds updated name
+            File newFile = new File(entry.getParent(), newName);
+            result.add(newFile);//Add updated arraylist to result array
+        //If entry is a directory, program searches in directory and lists individual files
+        } else if (entry.isDirectory()) {
+
+             List<File> tempList = Arrays.asList(entry.listFiles());
+           tempList=renameMethod(tempList,suffix);
+            for (File child : tempList) {
+                
+                
+                result.add(child);
+            }
+        }
+    }
+  //program returns updated arraylist with set changes 
+    return result;
+}   
+
    
    
    
@@ -312,85 +308,87 @@ public class Processes {
    
    
    //**********************************SPLIT METHOD*********************************************
-   
-   
-   
    /**
-   * This method splits the files in the input list and stores the resulting files in an output list.
-   * @param entries A list of files to be split
-   * @param lines   The number of lines each split file should contain
-   * @return A list of files containing the split files
-   * @throws IOException if an I/O error occurs
-   */
-   public static List<File> FileSplit(List<File> entries, int lines) throws IOException 
-   {
-       // Split files and store in output list
-       List<File> result = new ArrayList<>();
-       for(int i = 0; i < entries.size(); i++)
-       {
-           if((entries.get(i)).isDirectory())
-           {
-               File[] temp = entries.get(i).listFiles();
-               for (int j = 0; j < temp.length; j++) {
-                   entries.add(temp[j]);
-               }
-               entries.remove(i);
-           }
-       }
+    * This method splits the files in the input list and stores the resulting files in an output list.
+    * @param entries A list of files to be split
+    * @param lines   The number of lines each split file should contain
+    * @return A list of files containing the split files
+    * @throws IOException if an I/O error occurs
+    */
+    public static List<File> FileSplit(List<File> entries, int lines) throws IOException 
+    {
+        // Split files and store in output list
+        List<File> result = new ArrayList<>();
+        for(int i = 0; i < entries.size(); i++)
+        {
+            if((entries.get(i)).isDirectory())
+            {
+                File[] temp = entries.get(i).listFiles();
+                for (int j = 0; j < temp.length; j++) {
+                    entries.add(temp[j]);
+                }
+                entries.remove(i);
+                FileSplit(entries, lines);
+            }
+        }
 
-       for (File entry : entries) 
-       {
-           if (entry.isFile()) 
-           {
-               BufferedReader reader = new BufferedReader(new FileReader(entry));
-               String line;
-               int count = 1;
-               int part = 1;
-               List<String> linesToWrite = new ArrayList<>(lines);
+        for (File entry : entries) 
+        {
+            if (entry.isFile()) 
+            {
+                BufferedReader reader = new BufferedReader(new FileReader(entry));
+                String line;
+                int count = 1;
+                int part = 1;
+                List<String> linesToWrite = new ArrayList<>(lines);
 
-               // Splitting the file into parts
-               while ((line = reader.readLine()) != null) 
-               {
-                   linesToWrite.add(line);
+                // Splitting the file into parts
+                while ((line = reader.readLine()) != null) 
+                {
+                    linesToWrite.add(line);
 
-                   // If the number of lines has reached the limit, write the part to a file
-                   if (count % lines == 0) 
-                   {
-                       File outFile = new File(entry.getParentFile(), entry.getName() + ".part" + part + ".txt");
-                       result.add(outFile);
-                       part++;
+                    // If the number of lines has reached the limit, write the part to a file
+                    if (count % lines == 0) 
+                    {
+                        File outFile = new File(entry.getParentFile(), entry.getName() + ".part" + part + ".txt");
+                        result.add(outFile);
+                        part++;
 
-                       try (PrintWriter writer = new PrintWriter(new FileWriter(outFile))) 
-                       {
-                           for (String s : linesToWrite) 
-                           {
-                               writer.println(s);
-                           }
-                       }
-                       linesToWrite.clear();
-                   }
-                   count++;
-               }
+                        try (PrintWriter writer = new PrintWriter(new FileWriter(outFile))) 
+                        {
+                            for (String s : linesToWrite) 
+                            {
+                                writer.println(s);
+                            }
+                        }
+                        linesToWrite.clear();
+                    }
+                    count++;
+                }
 
-               // If there are remaining lines, write them to the last part file
-               if (!linesToWrite.isEmpty()) 
-               {
-                   File outFile = new File(entry.getParentFile(), entry.getName() + ".part" + part + ".txt");
-                   result.add(outFile);
+                // If there are remaining lines, write them to the last part file
+                if (!linesToWrite.isEmpty()) 
+                {
+                    File outFile = new File(entry.getParentFile(), entry.getName() + ".part" + part + ".txt");
+                    result.add(outFile);
 
-                   try (PrintWriter writer = new PrintWriter(new FileWriter(outFile))) 
-                   {
-                       for (String s : linesToWrite) 
-                       {
-                           writer.println(s);
-                       }
-                   }
-               }
-           }
-       }
-       return result;
-   }
-
+                    try (PrintWriter writer = new PrintWriter(new FileWriter(outFile))) 
+                    {
+                        for (String s : linesToWrite) 
+                        {
+                            writer.println(s);
+                        }
+                    }
+                }
+                reader.close();
+            }
+        }
+       
+        return result;
+    }
+   
+   
+  
    
  //**********************PRINT METHOD*********************************************
    public static List<File> FilePrint(List<File> entries) {

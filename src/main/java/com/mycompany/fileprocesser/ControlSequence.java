@@ -33,30 +33,37 @@ public class ControlSequence {
 		List<File> returnFiles = new ArrayList<File>();
 		
 		switch (mode) {
-		case ("Name"):	
+		case ("NameFilter"):	
 			returnFiles = filterNameMethodCall(process, files);
 		break;
 		
 		case ("Rename"):
 			returnFiles =  renameMethodCall(process, files);
+		break;
 		
-		case ("Length"):	
+		case ("LengthFilter"):	
 			returnFiles = filterLengthMethodCall(process, files);
+		break;
 		
-		case ("Content"):	
+		case ("ContentFilter"):	
 			returnFiles = filterContentMethodCall(process, files);
+		break;
 		
-		case ("Count"):	
+		case ("CountFilter"):	
 			returnFiles = filterCountMethodCall(process, files);
+		break;
 		
 		case ("Split"):	
 			returnFiles = fileSplitMethodCall(process, files);
+		break;
 		
 		case ("List"):	
 			returnFiles = listMethodCall(process, files);
+		break;
 		
 		case ("Print"):	
 			returnFiles = Processes.FilePrint(files);
+		break;
 		
 		default: 
 			System.out.println("Something went wrong with process selection");
@@ -77,7 +84,7 @@ public class ControlSequence {
 	//Loads rename method with process parameters to be called
 	private static List<File> renameMethodCall(JSONObject process, List<File> files) throws IOException{
 		String suffix = Instructions.processToParamValue(process);
-		return Processes.RenameMethod(files, suffix);
+		return Processes.renameMethod(files, suffix);
 	}
 	
 	//Loads content filter method with process parameters to be called
