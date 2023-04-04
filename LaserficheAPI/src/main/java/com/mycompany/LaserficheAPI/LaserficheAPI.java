@@ -53,7 +53,7 @@ public class LaserficheAPI {
         useAPIMethods.print(entries4, entry4);
 
         // use class to create new directory 
-//        useAPIMethods.makeDirectory();
+        useAPIMethods.makeDirectory();
 //        useAPIMethods.changeDirectory();
         
         // download files locally
